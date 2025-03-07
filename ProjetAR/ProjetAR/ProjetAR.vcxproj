@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1D9B5FCF-897A-DE6A-9292-6941FEF044CC}</ProjectGuid>
+    <ProjectGuid>{ECF958A2-D8C6-B3AD-01E0-A155ED0BE93B}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>BeginAr</RootNamespace>
+    <RootNamespace>ProjetAR</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -41,16 +41,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\build\bin\Debug-windows-x86_64\BeginAr\</OutDir>
-    <IntDir>..\build\obj\Debug-windows-x86_64\BeginAr\</IntDir>
-    <TargetName>BeginAr</TargetName>
+    <OutDir>..\build\bin\Debug-windows-x86_64\ProjetAR\</OutDir>
+    <IntDir>..\build\obj\Debug-windows-x86_64\ProjetAR\</IntDir>
+    <TargetName>ProjetAR</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\build\bin\Release-windows-x86_64\BeginAr\</OutDir>
-    <IntDir>..\build\obj\Release-windows-x86_64\BeginAr\</IntDir>
-    <TargetName>BeginAr</TargetName>
+    <OutDir>..\build\bin\Release-windows-x86_64\ProjetAR\</OutDir>
+    <IntDir>..\build\obj\Release-windows-x86_64\ProjetAR\</IntDir>
+    <TargetName>ProjetAR</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

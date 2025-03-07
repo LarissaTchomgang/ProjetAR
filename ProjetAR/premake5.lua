@@ -1,43 +1,89 @@
--- SDL3App/premake5.lua
-project "BeginAr"
-    kind "ConsoleApp" -- StaticLib SharedLib
-    language "C++"
-    cppdialect "C++20"
+outputdir 		= ""
+build 			= ""
+build_obj 		= ""
 
-    BuildsInfos("%{prj.name}")
+external = {}
+external.path = "%{wks.location}/External"
+external.libs = external.path .. "/Libs"
 
-    -- files { "%{prj.name}/src/**.cpp", "%{prj.name}/src/**.h" }
-    files { "./src/**.cpp", "./src/**.h" }
-    includedirs { "./src", libs.imgui.include, libs.glad2.include }
-    links { "Glad2", "Imgui", "opengl32" }
+libs = {}
+libs.sdl3 = {
+    include = external.libs .. "/SDL3/include",
+    lib = {
+        msvc = external.libs .. "/SDL3/msvc/x64",
+        mingw = external.libs .. "/SDL3/mingw/lib",
+        android = external.libs .. "/SDL3/android",
+    }
+}
 
-    -- Windows (ClangCL)
+libs.imgui = {
+    include = external.libs .. "/imgui",
+}
+
+libs.glad2 = {
+    include = external.libs .. "/Glad2/include",
+}
+
+function OutputDir()
+    outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+end
+
+function BuildDir()
+    build = "%{wks.location}/build/bin/"
+end
+
+function BuildIntDir()
+    build_obj = "%{wks.location}/build/obj/"
+end
+
+function BuildsInfos(projectName)
+    targetdir ( build .. outputdir .. "/" .. projectName )
+    objdir ( build_obj .. outputdir .. "/" .. projectName )
+end
+
+function PostBuilds(libName, projectName)
+    if libraryType == "SharedLib" then
+        postbuildcommands {
+            ("{COPY} " .. build .. outputdir .. "/" .. libName .. "/" .. libName .. ".dll " .. build .. outputdir .. "/" .. projectName),
+        }
+    end
+end
+
+function PostBuilds2(path, libName, projectName)
+    postbuildcommands {
+        ("{COPY} " .. path .. "/" .. libName .. ".dll " .. build .. outputdir .. "/" .. projectName),
+    }
+end
+
+-- premake5.lua (à la racine)
+workspace "ProjetAR"
+    configurations { "Debug", "Release" }
+    platforms { "x64" }
+
+    -- Définit un dossier de sortie basé sur la configuration, le système et l'architecture
+    OutputDir()
+    BuildDir()
+    BuildIntDir()
+
+    -- Détection automatique du compilateur
     filter "system:windows"
-        links { "msvcrt" }  -- Lien avec la bibliothèque standard Windows
-        buildoptions { "/Wall" } -- Avertissements maximum pour ClangCL
+        toolset "clang"  -- Utiliser ClangCL sous Windows
 
-        links { "SDL3" }
-        includedirs { libs.sdl3.include}
-        libdirs { libs.sdl3.lib.msvc }
+    filter "system:linux or system:macosx"
+        toolset "clang"  -- Utiliser Clang natif sous Linux/macOS
 
-        -- Postbuild step to copy SDL3.dll to the output directory
-        PostBuilds2(libs.sdl3.lib.msvc, "SDL3", "%{prj.name}")
+    -- Configuration globale Debug
+    filter "configurations:Debug"
+        symbols "On"
+        optimize "Off"
+        defines { "DEBUG" }
 
-    -- Linux
-    filter "system:linux"
-        links { "pthread", "dl" }  -- Ajout des dépendances système standard
-        buildoptions { "-Wall", "-Wextra", "-Wpedantic", "-Wshadow", "-Werror" }
-        linkoptions { "-static-libstdc++" }
+    -- Configuration globale Release
+    filter "configurations:Release"
+        optimize "On"
+        symbols "Off"
+        defines { "NDEBUG" }
 
-        -- Liens avec SDL3 pour Linux
-        --links { "SDL3" }
-        --includedirs { libs.sdl3.include }
-        --libdirs { libs.sdl3.lib.mingw }
-
-        -- Commande post-build spécifique pour Linux (si nécessaire)
-        --PostBuilds2(libs.sdl3.lib.mingw, "SDL3", "%{prj.name}")
-
-    -- macOS
-    filter "system:macosx"
-        buildoptions { "-Wall", "-Wextra", "-Wpedantic", "-Wshadow", "-Werror" }
-        linkoptions { "-stdlib=libc++" }
+    include "./External/Libs/imgui"
+    include "./External/Libs/Glad2"
+    include "ProjetAR"

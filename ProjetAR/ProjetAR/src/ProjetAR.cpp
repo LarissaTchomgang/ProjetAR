@@ -160,9 +160,15 @@ int main(int, char**)
                     done = true;
                 }
                 if (event.key.key == SDLK_B){
-                    keyPressed = "Bonjour tout le monde";
+                    keyPressed = "C appuyé";
                 }
             }
+            if (event.type == SDL_EVENT_KEY_UP){
+                if (event.key.key == SDLK_B){
+                    keyPressed = "C relaché";
+                }
+            }
+
         }
         if (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED)
         {
